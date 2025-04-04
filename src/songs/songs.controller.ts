@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CraeteSongDTO } from './dto/create-song-dto';
 
@@ -10,8 +10,14 @@ export class SongsController {
     create(@Body() createSongDTO: CraeteSongDTO){
         return this.songService.createSong(createSongDTO);  
     }
-    @Get()
+    @Get('get-songs')
     GetAllSongs(){
-        return this.songService.findAll('Dynamic Type: ')
+        try{
+            return this.songService.findAll();
+        }catch(err){
+            console.log(err?.message, ' Error Message ')
+            // for exception nest js has httpexception
+            throw new HttpException('server error', HttpStatus.INTERNAL_SERVER_ERROR, { cause: err})
+        }
     }
 }
