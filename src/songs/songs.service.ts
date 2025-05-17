@@ -10,7 +10,12 @@ export class SongsService {
         return this._songs
     }
     findAllSongs(){
-        return this._songs
+        try{
+            throw new Error('Exception while fetching the records from DB!')
+            // return this._songs
+        }catch(err){
+            throw new Error('Exception while fetching the records from DB!')
+        }
     }
 
 }

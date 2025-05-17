@@ -1,19 +1,21 @@
-import { Body, Controller, Delete, Get, Post, Put, Req, Request } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Post, Put, Req, Request } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 @Controller('songs')
 export class SongsController {
     constructor(private SongsService: SongsService){}
-    @Post()
+    @Post('create-song')
     createSong(@Body() createSongDTO: CreateSongDTO){
-        console.log('Request Body: ', JSON.stringify(Request))
-        console.log('Request Body: ', JSON.stringify(Req))
-
         return this.SongsService.create(createSongDTO)
     }
-    @Get()
+    @Get('getsongs')
     findAll(){
-        return this.SongsService.findAllSongs()
+        try{
+            return this.SongsService.findAllSongs()
+        }catch(err){
+            console.log('I am in the catch block ', err);
+            throw new HttpException('server error ', HttpStatus.OK, { cause: err})
+        }
     }
     @Get(':id')
     findOne(){
